@@ -5,67 +5,50 @@ package main
 import (
 	"context"
 	"github.com/cloudwego/hertz/pkg/app/server"
-	"github.com/cloudwego/hertz/pkg/app/server/registry"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
-	"github.com/cloudwego/hertz/pkg/common/utils"
-	consulapi "github.com/hashicorp/consul/api"
 	hertzlogrus "github.com/hertz-contrib/obs-opentelemetry/logging/logrus"
 	"github.com/hertz-contrib/obs-opentelemetry/provider"
 	"github.com/hertz-contrib/obs-opentelemetry/tracing"
-	"github.com/hertz-contrib/registry/consul"
-	"github.com/sirupsen/logrus"
-	"log"
+	"github.com/hertz-contrib/pprof"
 	"nico_minidouyin/config"
 	"nico_minidouyin/mw"
+	"os"
 )
 
-func createConsulRegistry() (r *registry.Registry) {
-	// build a consul client
-	consulConfig := consulapi.DefaultConfig()
-	consulConfig.Address = config.ConsulAddress
-	consulClient, err := consulapi.NewClient(consulConfig)
-	if err != nil {
-		log.Fatal(err)
-		return nil
-	}
-	// build a consul register with the consul client
-	consulRegister := consul.NewConsulRegister(consulClient)
-	r = &consulRegister
-	return
+func DevEnv() bool {
+	return os.Getenv("ENV") == "dev"
 }
 
-func Init() {
-	logger := hertzlogrus.NewLogger(
-		hertzlogrus.WithLogger(&logrus.Logger{}),
-	)
+func hlogInit() {
+	logger := hertzlogrus.NewLogger()
 	// hlog init
 	hlog.SetLogger(logger)
 	hlog.SetLevel(hlog.LevelDebug)
 }
 
+func otelInit() {
+	if !DevEnv() {
+		p := provider.NewOpenTelemetryProvider(
+			provider.WithServiceName(config.FeedServiceName),
+			// Support setting ExportEndpoint via environment variables: OTEL_EXPORTER_OTLP_ENDPOINT
+			provider.WithInsecure(),
+		)
+		defer func() { _ = p.Shutdown(context.Background()) }()
+	}
+}
+
 func main() {
-	Init()
+	hlogInit()
+	otelInit()
 	tracer, cfg := tracing.NewServerTracer()
 	h := server.New(tracer,
 		server.WithHostPorts(config.ServiceAddress),
-		server.WithRegistry(*createConsulRegistry(), &registry.Info{
-			ServiceName: config.FeedServiceName,
-			Addr:        utils.NewNetAddr("tcp", config.ServiceAddress),
-			Weight:      10,
-			Tags:        nil,
-		}))
+		*WithConsul(),
+	)
 	h.Use(mw.ProtoJsonMiddleware())
 
-	p := provider.NewOpenTelemetryProvider(
-		provider.WithServiceName(config.FeedServiceName),
-		// Support setting ExportEndpoint via environment variables: OTEL_EXPORTER_OTLP_ENDPOINT
-		provider.WithInsecure(),
-	)
-
-	defer p.Shutdown(context.Background())
-
 	// use pprof mw
-	//pprof.Register(h)
+	pprof.Register(h)
 	// use otel mw
 	h.Use(tracing.ServerMiddleware(cfg))
 	register(h)
