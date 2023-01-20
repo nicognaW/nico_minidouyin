@@ -4,15 +4,18 @@ package main
 
 import (
 	"context"
+	"os"
+
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	hertzlogrus "github.com/hertz-contrib/obs-opentelemetry/logging/logrus"
 	"github.com/hertz-contrib/obs-opentelemetry/provider"
 	"github.com/hertz-contrib/obs-opentelemetry/tracing"
 	"github.com/hertz-contrib/pprof"
+
 	"nico_minidouyin/config"
 	"nico_minidouyin/mw"
-	"os"
+	"nico_minidouyin/service/feed/biz/rpc"
 )
 
 func DevEnv() bool {
@@ -38,10 +41,12 @@ func otelInit() {
 }
 
 func main() {
+	rpc.RpcInit()
 	hlogInit()
 	otelInit()
 	tracer, cfg := tracing.NewServerTracer()
-	h := server.New(tracer,
+	h := server.New(
+		tracer,
 		server.WithHostPorts(config.ServiceAddress),
 		*WithConsul(),
 	)

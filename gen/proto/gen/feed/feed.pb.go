@@ -7,12 +7,14 @@
 package feed
 
 import (
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	"reflect"
+	"sync"
+
+	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/runtime/protoimpl"
 	_ "google.golang.org/protobuf/types/known/wrapperspb"
+
 	_ "nico_minidouyin/service/feed/biz/model/api"
-	reflect "reflect"
-	sync "sync"
 )
 
 const (
@@ -401,9 +403,10 @@ var (
 )
 
 func file_feed_proto_rawDescGZIP() []byte {
-	file_feed_proto_rawDescOnce.Do(func() {
-		file_feed_proto_rawDescData = protoimpl.X.CompressGZIP(file_feed_proto_rawDescData)
-	})
+	file_feed_proto_rawDescOnce.Do(
+		func() {
+			file_feed_proto_rawDescData = protoimpl.X.CompressGZIP(file_feed_proto_rawDescData)
+		})
 	return file_feed_proto_rawDescData
 }
 
