@@ -16,12 +16,6 @@ message LoginResponse {
   optional string token = 4; // 用户鉴权token
 }
 
-service LoginService {
-  rpc Login (LoginRequest) returns (LoginResponse) {
-    option (api.post) = "/douyin/user/login/";
-  }
-}
-
 message RegisterRequest {
   string username = 1[(api.query) = "username"]; // 注册用户名，最长32个字符
   string password = 2[(api.query) = "password"]; // 密码，最长32个字符
@@ -34,8 +28,12 @@ message RegisterResponse {
   string token = 4; // 用户鉴权token
 }
 
-service RegisterService {
+service AuthService {
   rpc Register (RegisterRequest) returns (RegisterResponse) {
     option (api.post) = "/douyin/user/register";
+  }
+
+  rpc Login (LoginRequest) returns (LoginResponse) {
+    option (api.post) = "/douyin/user/login/";
   }
 }

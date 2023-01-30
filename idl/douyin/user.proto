@@ -1,4 +1,3 @@
-//WIP
 syntax = "proto3";
 package douyin;
 option go_package = "douyin/user";
@@ -6,13 +5,13 @@ import "api.proto";
 import "google/protobuf/wrappers.proto";
 
 message UserRequest {
-  string user_id = 1; // 用户id
-  string token = 2; // 用户鉴权token
+  string user_id = 1[(api.query) = "user_id"]; // 用户id
+  string token = 2[(api.query) = "token"]; // 用户鉴权token
 }
 
 message UserResponse {
   uint32 status_code = 1; // 状态码，0-成功，其他值-失败
-  optional string status_msg = 2; // 返回状态描述
+  string status_msg = 2; // 返回状态描述
   User user = 3; // 用户信息
 }
 
@@ -22,4 +21,11 @@ message User {
   uint32 follow_count = 3; // 关注总数
   uint32 follower_count = 4; // 粉丝总数
   bool is_follow = 5; // true-已关注，false-未关注
+}
+
+
+service UserService {
+  rpc GetFeed (UserRequest) returns (UserResponse) {
+    option (api.get) = "/douyin/user/";
+  }
 }
