@@ -7,8 +7,8 @@ import (
 
 	"nico_minidouyin/config"
 	pb "nico_minidouyin/gen/douyin/feed"
+	"nico_minidouyin/repo"
 	db "nico_minidouyin/service/feed/model"
-	"nico_minidouyin/service/feed/repo"
 )
 
 type FeedService struct {
