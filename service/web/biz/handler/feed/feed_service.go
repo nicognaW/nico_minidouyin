@@ -7,21 +7,45 @@ import (
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
-	feed "nico_minidouyin/gen/douyin/feed"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
+
+	pb "nico_minidouyin/gen/douyin/feed"
 )
+
+var (
+	conn   *grpc.ClientConn
+	client pb.FeedServiceClient
+)
+
+func init() {
+	var opts []grpc.DialOption
+
+	opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	var err error
+	conn, err = grpc.Dial("localhost:40127", opts...)
+	if err != nil {
+		panic(err)
+	}
+	client = pb.NewFeedServiceClient(conn)
+}
 
 // GetFeed .
 // @router /douyin/feed/ [GET]
 func GetFeed(ctx context.Context, c *app.RequestContext) {
 	var err error
-	var req feed.FeedRequest
+	var req pb.FeedRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		c.String(consts.StatusBadRequest, err.Error())
 		return
 	}
 
-	resp := new(feed.FeedResponse)
+	resp, err := client.GetFeed(ctx, &req)
+	if err != nil {
+		c.JSON(consts.StatusInternalServerError, err.Error())
+		return
+	}
 
 	c.JSON(consts.StatusOK, resp)
 }

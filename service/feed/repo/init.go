@@ -1,8 +1,9 @@
 package repo
 
 import (
-	"nico_minidouyin/config"
 	"time"
+
+	"nico_minidouyin/config"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
