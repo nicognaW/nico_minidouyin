@@ -1,6 +1,6 @@
 syntax = "proto3";
 package douyin;
-option go_package = "douyin/proto/gen/feed";
+option go_package = "douyin/feed";
 import "api.proto";
 import "google/protobuf/wrappers.proto";
 

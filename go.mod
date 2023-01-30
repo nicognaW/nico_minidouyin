@@ -13,6 +13,7 @@ require (
 	github.com/jackc/pgerrcode v0.0.0-20220416144525-469b46aa5efa
 	github.com/jackc/pgx/v5 v5.2.0
 	github.com/stretchr/testify v1.8.1
+	google.golang.org/grpc v1.46.2
 	google.golang.org/protobuf v1.28.1
 	gorm.io/driver/postgres v1.4.6
 	gorm.io/gorm v1.24.3
@@ -81,7 +82,6 @@ require (
 	golang.org/x/sys v0.4.0 // indirect
 	golang.org/x/text v0.6.0 // indirect
 	google.golang.org/genproto v0.0.0-20211118181313-81c1377c94b1 // indirect
-	google.golang.org/grpc v1.46.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 

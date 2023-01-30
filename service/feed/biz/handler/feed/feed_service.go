@@ -6,21 +6,21 @@ import (
 	"context"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
-	"nico_minidouyin/service/feed/biz/model/douyin/proto/gen/feed"
+	"nico_minidouyin/service/feed/biz/model/douyin"
 )
 
 // GetFeed .
 // @router /douyin/feed/ [GET]
 func GetFeed(ctx context.Context, c *app.RequestContext) {
 	var err error
-	var req feed.FeedRequest
+	var req douyin.FeedRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		c.String(consts.StatusBadRequest, err.Error())
 		return
 	}
 
-	resp := new(feed.FeedResponse)
+	resp := new(douyin.FeedResponse)
 	msg := "success"
 	resp.StatusMsg = &msg
 
