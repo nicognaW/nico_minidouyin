@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"log"
 	"nico_minidouyin/config"
-	dbModels "nico_minidouyin/service/feed/biz/model/douyin/db"
+	feedModel "nico_minidouyin/service/feed/model"
+	userModel "nico_minidouyin/service/user/model"
 	"testing"
 
 	"github.com/cloudwego/hertz/pkg/common/test/assert"
@@ -14,7 +15,26 @@ import (
 	"gorm.io/gorm"
 )
 
+func TestMigrate(t *testing.T) {
+	var err error
+	db, err := gorm.Open(
+		postgres.New(
+			postgres.Config{
+				DSN: config.DSN,
+			}), &gorm.Config{
+			DisableForeignKeyConstraintWhenMigrating: true,
+		})
+	if err != nil {
+		panic(fmt.Errorf("db connection failed: %v", err))
+	}
+	err = db.AutoMigrate(&userModel.User{}, &feedModel.Video{})
+	assert.Nil(t, err)
+}
+
 func TestDB(t *testing.T) {
+	/**
+	1. create db connection
+	*/
 	var err error
 	db, err := gorm.Open(
 		postgres.New(
@@ -27,13 +47,14 @@ func TestDB(t *testing.T) {
 	if err != nil {
 		panic(fmt.Errorf("db connection failed: %v", err))
 	}
-	err = db.AutoMigrate(&dbModels.User{}, &dbModels.Video{})
 
-	if err != nil {
-		panic(fmt.Errorf("db migration failed: %v", err))
-	}
-
-	author := &dbModels.User{
+	/**
+	2. create default user as author
+	*/
+	password := "password"
+	author := &userModel.User{
+		Username:      "nyanki",
+		Password:      &password,
 		FollowCount:   0,
 		FollowerCount: 0,
 		Name:          "Nyanki",
@@ -46,7 +67,10 @@ func TestDB(t *testing.T) {
 		}
 	}
 
-	video := &dbModels.Video{
+	/**
+	3. create video with author
+	*/
+	video := &feedModel.Video{
 		AuthorId:      author.ID,
 		PlayUrl:       "https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/all/boxcneWtGYeCxvnZq4ZuSyZMxit",
 		CoverUrl:      "https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/v2/cover/boxcnHd0AC6LDN4A4QBVp16q9q1?width=480&height=270&policy=near&fall_back=1",
@@ -62,14 +86,17 @@ func TestDB(t *testing.T) {
 		}
 	}
 
+	/**
+	4. validate the data
+	*/
 	func() {
-		var authorFound dbModels.User
+		var authorFound userModel.User
 		if firstResult := db.Where("id = 1").First(&authorFound); firstResult.Error == gorm.ErrRecordNotFound {
 			panic(fmt.Errorf("default UID0 user not found: %v", firstResult.Error))
 		}
 		assert.DeepEqual(t, authorFound.Name, author.Name)
 
-		videoFound := make([]*dbModels.Video, 0)
+		videoFound := make([]*feedModel.Video, 0)
 		firstResult := db.Where("author_id = 1").Find(&videoFound)
 		log.Printf("found %d rows: %v", firstResult.RowsAffected, videoFound)
 

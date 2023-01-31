@@ -4,11 +4,31 @@ package user
 
 import (
 	"context"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
+	pb "nico_minidouyin/gen/douyin/user"
+	user "nico_minidouyin/gen/douyin/user"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
-	"nico_minidouyin/gen/douyin/user"
 )
+
+var (
+	conn   *grpc.ClientConn
+	client pb.UserServiceClient
+)
+
+func init() {
+	var opts []grpc.DialOption
+
+	opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	var err error
+	conn, err = grpc.Dial("localhost:40128", opts...)
+	if err != nil {
+		panic(err)
+	}
+	client = pb.NewUserServiceClient(conn)
+}
 
 // GetUser .
 // @router /douyin/user/ [GET]
@@ -21,7 +41,11 @@ func GetUser(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(user.UserResponse)
-
+	//resp := new(user.UserResponse)
+	resp, err := client.GetUser(ctx, &req)
+	if err != nil {
+		c.JSON(consts.StatusInternalServerError, err.Error())
+		return
+	}
 	c.JSON(consts.StatusOK, resp)
 }

@@ -7,7 +7,7 @@ import (
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
-	auth "nico_minidouyin/gen/douyin/auth"
+	"nico_minidouyin/gen/douyin/auth"
 )
 
 // Register .
@@ -37,7 +37,9 @@ func Login(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(auth.LoginResponse)
+	//resp := new(auth.LoginResponse)
+	//
+	//c.JSON(consts.StatusOK, resp)
 
-	c.JSON(consts.StatusOK, resp)
+	c.JSON(consts.StatusInternalServerError, "not implemented")
 }

@@ -1,6 +1,7 @@
 package repo
 
 import (
+	genDB "nico_minidouyin/gen/db"
 	"time"
 
 	"nico_minidouyin/config"
@@ -31,6 +32,7 @@ func init() {
 			Logger:      gormlogrus,
 		},
 	)
+	genDB.SetDefault(DB)
 	if err != nil {
 		panic(err)
 	}

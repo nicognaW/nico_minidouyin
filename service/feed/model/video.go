@@ -1,11 +1,11 @@
 package model
 
 import (
-	"nico_minidouyin/repo"
+	"nico_minidouyin/repo/model"
 )
 
 type Video struct {
-	repo.Model
+	model.Model
 	AuthorId      uint32
 	PlayUrl       string // 视频播放地址
 	CoverUrl      string // 视频封面地址
