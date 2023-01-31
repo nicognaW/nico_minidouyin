@@ -25,7 +25,7 @@ message User {
 
 
 service UserService {
-  rpc GetFeed (UserRequest) returns (UserResponse) {
+  rpc GetUser (UserRequest) returns (UserResponse) {
     option (api.get) = "/douyin/user/";
   }
 }
