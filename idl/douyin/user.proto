@@ -1,5 +1,5 @@
 syntax = "proto3";
-package douyin;
+package douyin.user;
 option go_package = "douyin/user";
 import "api.proto";
 import "google/protobuf/wrappers.proto";

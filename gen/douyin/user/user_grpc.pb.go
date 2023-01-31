@@ -35,7 +35,7 @@ func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
 
 func (c *userServiceClient) GetUser(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserResponse, error) {
 	out := new(UserResponse)
-	err := c.cc.Invoke(ctx, "/douyin.UserService/GetUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/douyin.user.UserService/GetUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +80,7 @@ func _UserService_GetUser_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/douyin.UserService/GetUser",
+		FullMethod: "/douyin.user.UserService/GetUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).GetUser(ctx, req.(*UserRequest))
@@ -92,7 +92,7 @@ func _UserService_GetUser_Handler(srv interface{}, ctx context.Context, dec func
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var UserService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "douyin.UserService",
+	ServiceName: "douyin.user.UserService",
 	HandlerType: (*UserServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

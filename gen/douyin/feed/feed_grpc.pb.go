@@ -35,7 +35,7 @@ func NewFeedServiceClient(cc grpc.ClientConnInterface) FeedServiceClient {
 
 func (c *feedServiceClient) GetFeed(ctx context.Context, in *FeedRequest, opts ...grpc.CallOption) (*FeedResponse, error) {
 	out := new(FeedResponse)
-	err := c.cc.Invoke(ctx, "/douyin.FeedService/GetFeed", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/douyin.feed.FeedService/GetFeed", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +80,7 @@ func _FeedService_GetFeed_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/douyin.FeedService/GetFeed",
+		FullMethod: "/douyin.feed.FeedService/GetFeed",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(FeedServiceServer).GetFeed(ctx, req.(*FeedRequest))
@@ -92,7 +92,7 @@ func _FeedService_GetFeed_Handler(srv interface{}, ctx context.Context, dec func
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var FeedService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "douyin.FeedService",
+	ServiceName: "douyin.feed.FeedService",
 	HandlerType: (*FeedServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
