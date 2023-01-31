@@ -11,9 +11,9 @@ message LoginRequest {
 
 message LoginResponse {
   uint32 status_code = 1; // 状态码，0-成功，其他值-失败
-  optional string status_msg = 2; // 返回状态描述
-  optional uint32 user_id = 3; // 用户id
-  optional string token = 4; // 用户鉴权token
+  string status_msg = 2; // 返回状态描述
+  uint32 user_id = 3; // 用户id
+  string token = 4; // 用户鉴权token
 }
 
 message RegisterRequest {

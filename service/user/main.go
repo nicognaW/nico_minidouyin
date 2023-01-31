@@ -7,7 +7,8 @@ import (
 
 	"google.golang.org/grpc"
 
-	pb "nico_minidouyin/gen/douyin/user"
+	pbAuth "nico_minidouyin/gen/douyin/auth"
+	pbUser "nico_minidouyin/gen/douyin/user"
 	"nico_minidouyin/service/user/app"
 )
 
@@ -19,9 +20,12 @@ func main() {
 	}
 	var opts []grpc.ServerOption
 
-	s := &app.UserService{}
+	userService := &app.UserService{}
+	authService := &app.AuthService{}
 	grpcServer := grpc.NewServer(opts...)
-	pb.RegisterUserServiceServer(grpcServer, s)
+	pbUser.RegisterUserServiceServer(grpcServer, userService)
+	pbAuth.RegisterAuthServiceServer(grpcServer, authService)
+
 	err = grpcServer.Serve(lis)
 	if err != nil {
 		panic(err)
