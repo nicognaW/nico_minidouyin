@@ -39,6 +39,9 @@ fi
 mv service/web/go.mod service/web/go.mod.bak
 cp -R service/web/gen/ gen/
 rm -rf service/web/gen
+mkdir service/web/gen
+cp -R gen/api service/web/gen/
+rm -rf gen/api
 
 for file in service/web/biz/handler/"$1"/*_service.go; do
   echo 修正 "$file"
@@ -51,6 +54,6 @@ for file in service/web/biz/handler/"$1"/*_service.go; do
 done
 
 cd gen &&
-protoc --go-grpc_out=. --go-grpc_opt=paths=source_relative --proto_path ../idl/ ../idl/douyin/"$1".proto &&
-mv douyin/"$1"_grpc.pb.go douyin/"$1" &&
-cd ../
+  protoc --go-grpc_out=. --go-grpc_opt=paths=source_relative --proto_path ../idl/ ../idl/douyin/"$1".proto &&
+  mv douyin/"$1"_grpc.pb.go douyin/"$1" &&
+  cd ../
