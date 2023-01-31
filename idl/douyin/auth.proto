@@ -5,8 +5,8 @@ import "api.proto";
 import "google/protobuf/wrappers.proto";
 
 message LoginRequest {
-  string username = 1[(api.query) = "username"]; // 登录用户名
-  string password = 2[(api.query) = "password"]; // 登录密码
+  string username = 1[(api.query) = "username", (api.vd) = "$!='' && mblen($)>=1 && mblen($)<=32"]; // 登录用户名
+  string password = 2[(api.query) = "password", (api.vd) = "$!='' && mblen($)>=1 && mblen($)<=32"]; // 登录密码
 }
 
 message LoginResponse {
@@ -17,8 +17,8 @@ message LoginResponse {
 }
 
 message RegisterRequest {
-  string username = 1[(api.query) = "username"]; // 注册用户名，最长32个字符
-  string password = 2[(api.query) = "password"]; // 密码，最长32个字符
+  string username = 1[(api.query) = "username", (api.vd) = "$!='' && mblen($)>=1 && mblen($)<=32"]; // 注册用户名，最长32个字符
+  string password = 2[(api.query) = "password", (api.vd) = "$!='' && mblen($)>=1 && mblen($)<=32"]; // 密码，最长32个字符
 }
 
 message RegisterResponse {

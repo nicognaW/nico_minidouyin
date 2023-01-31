@@ -49,6 +49,7 @@ func main() {
 		*WithConsul(),
 	)
 	h.Use(mw.ProtoJsonMiddleware())
+	h.Use(mw.BizErrorMiddleware())
 
 	// use pprof mw
 	pprof.Register(h)
