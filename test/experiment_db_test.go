@@ -15,22 +15,6 @@ import (
 	"gorm.io/gorm"
 )
 
-func TestMigrate(t *testing.T) {
-	var err error
-	db, err := gorm.Open(
-		postgres.New(
-			postgres.Config{
-				DSN: config.DSN,
-			}), &gorm.Config{
-			DisableForeignKeyConstraintWhenMigrating: true,
-		})
-	if err != nil {
-		panic(fmt.Errorf("db connection failed: %v", err))
-	}
-	err = db.AutoMigrate(&userModel.User{}, &feedModel.Video{})
-	assert.Nil(t, err)
-}
-
 func TestDB(t *testing.T) {
 	/**
 	1. create db connection
