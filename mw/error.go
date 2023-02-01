@@ -9,6 +9,9 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
+// BizError
+//
+// TODO: RPC services that use this struct will execute init(), should be refactored later.
 type BizError struct {
 	Msg string
 	Err *error
