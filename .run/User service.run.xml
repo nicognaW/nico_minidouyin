@@ -1,0 +1,22 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="User service" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="nico_minidouyin" />
+    <working_directory value="$PROJECT_DIR$" />
+    <envs>
+      <env name="ENV" value="dev" />
+      <env name="PGSQL_HOST" value="" />
+      <env name="PGSQL_PORT" value="" />
+      <env name="PGSQL_USER" value="" />
+      <env name="PGSQL_PASSWORD" value="" />
+      <env name="PGSQL_DBNAME" value="" />
+      <env name="REDIS_ADDR" value="" />
+      <env name="REDIS_PASSWORD" value="" />
+      <env name="REDIS_DB" value="" />
+    </envs>
+    <kind value="PACKAGE" />
+    <package value="nico_minidouyin/service/user" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/service/user/main.go" />
+    <method v="2" />
+  </configuration>
+</component>
