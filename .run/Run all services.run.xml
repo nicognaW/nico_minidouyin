@@ -1,0 +1,19 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run all services" type="CompoundRunConfigurationType">
+    <toRun name="Feed service" type="GoApplicationRunConfiguration" />
+    <toRun name="User service" type="GoApplicationRunConfiguration" />
+    <toRun name="Web api gateway service" type="GoApplicationRunConfiguration" />
+    <method v="2" />
+    <envs>
+      <env name="ENV" value="dev" />
+      <env name="PGSQL_HOST" value="" />
+      <env name="PGSQL_PORT" value="" />
+      <env name="PGSQL_USER" value="" />
+      <env name="PGSQL_PASSWORD" value="" />
+      <env name="PGSQL_DBNAME" value="" />
+      <env name="REDIS_ADDR" value="" />
+      <env name="REDIS_PASSWORD" value="" />
+      <env name="REDIS_DB" value="" />
+    </envs>
+  </configuration>
+</component>

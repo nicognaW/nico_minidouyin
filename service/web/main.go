@@ -4,8 +4,6 @@ package main
 
 import (
 	"context"
-	"os"
-
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	hertzlogrus "github.com/hertz-contrib/obs-opentelemetry/logging/logrus"
@@ -18,7 +16,7 @@ import (
 )
 
 func DevEnv() bool {
-	return os.Getenv("ENV") == "dev"
+	return config.EnvConfig.ENV == "dev"
 }
 
 func hlogInit() {
