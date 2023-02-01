@@ -1,30 +1,24 @@
 syntax = "proto3";
-package douyin;
-option go_package = "douyin/proto/gen/auth";
+package douyin.auth;
+option go_package = "douyin/auth";
 import "api.proto";
 import "google/protobuf/wrappers.proto";
 
 message LoginRequest {
-  string username = 1[(api.query) = "username"]; // 登录用户名
-  string password = 2[(api.query) = "password"]; // 登录密码
+  string username = 1[(api.query) = "username", (api.vd) = "$!='' && mblen($)>=1 && mblen($)<=32"]; // 登录用户名
+  string password = 2[(api.query) = "password", (api.vd) = "$!='' && mblen($)>=1 && mblen($)<=32"]; // 登录密码
 }
 
 message LoginResponse {
   uint32 status_code = 1; // 状态码，0-成功，其他值-失败
-  optional string status_msg = 2; // 返回状态描述
-  optional uint32 user_id = 3; // 用户id
-  optional string token = 4; // 用户鉴权token
-}
-
-service LoginService {
-  rpc Login (LoginRequest) returns (LoginResponse) {
-    option (api.post) = "/douyin/user/login/";
-  }
+  string status_msg = 2; // 返回状态描述
+  uint32 user_id = 3; // 用户id
+  string token = 4; // 用户鉴权token
 }
 
 message RegisterRequest {
-  string username = 1[(api.query) = "username"]; // 注册用户名，最长32个字符
-  string password = 2[(api.query) = "password"]; // 密码，最长32个字符
+  string username = 1[(api.query) = "username", (api.vd) = "$!='' && mblen($)>=1 && mblen($)<=32"]; // 注册用户名，最长32个字符
+  string password = 2[(api.query) = "password", (api.vd) = "$!='' && mblen($)>=1 && mblen($)<=32"]; // 密码，最长32个字符
 }
 
 message RegisterResponse {
@@ -34,8 +28,26 @@ message RegisterResponse {
   string token = 4; // 用户鉴权token
 }
 
-service RegisterService {
+message AuthenticateRequest {
+  string token = 1[(api.query) = "token"]; // 用户鉴权token
+}
+message AuthenticateResponse {
+  uint32 status_code = 1; // 状态码，0-成功，其他值-失败
+  string status_msg = 2; // 返回状态描述
+  uint32 user_id = 3; // 用户id
+}
+
+service AuthService {
+  rpc Authenticate (AuthenticateRequest) returns (AuthenticateResponse) {
+    option (api.post) = "/douyin/authenticate";
+    option (api.get) = "/douyin/authenticate";
+  }
+
   rpc Register (RegisterRequest) returns (RegisterResponse) {
     option (api.post) = "/douyin/user/register";
+  }
+
+  rpc Login (LoginRequest) returns (LoginResponse) {
+    option (api.post) = "/douyin/user/login/";
   }
 }
