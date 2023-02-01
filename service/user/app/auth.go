@@ -57,18 +57,18 @@ func (a AuthService) Login(ctx context.Context, request *auth.LoginRequest) (*au
 	if len(dbUser) == 0 {
 		errorMessage := "user not found"
 		resp.StatusCode = 114514
-		resp.StatusMsg = &errorMessage
+		resp.StatusMsg = errorMessage
 		return resp, nil
 	}
 	if *dbUser[0].Password != request.Password {
 		errorMessage := "password incorrect"
 		resp.StatusCode = 114514
-		resp.StatusMsg = &errorMessage
+		resp.StatusMsg = errorMessage
 		return resp, nil
 	}
 	token := strconv.Itoa(int(dbUser[0].ID)) + dbUser[0].Username
-	resp.Token = &token
+	resp.Token = token
 	resp.StatusCode = 0
-	resp.StatusMsg = nil
+	resp.StatusMsg = "success"
 	return resp, nil
 }
