@@ -39,8 +39,7 @@ message AuthenticateResponse {
 
 service AuthService {
   rpc Authenticate (AuthenticateRequest) returns (AuthenticateResponse) {
-    option (api.post) = "/douyin/authenticate";
-    option (api.get) = "/douyin/authenticate";
+    option (api.any) = "/douyin/authenticate";
   }
 
   rpc Register (RegisterRequest) returns (RegisterResponse) {

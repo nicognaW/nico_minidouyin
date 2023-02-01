@@ -10,7 +10,6 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"nico_minidouyin/config"
 	"nico_minidouyin/gen/douyin/auth"
-
 	pb "nico_minidouyin/gen/douyin/auth"
 )
 
@@ -72,7 +71,7 @@ func Login(ctx context.Context, c *app.RequestContext) {
 }
 
 // Authenticate .
-// @router /douyin/authenticate [GET]
+// @router /douyin/authenticate [ANY]
 func Authenticate(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req auth.AuthenticateRequest
