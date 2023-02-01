@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"nico_minidouyin/config"
 
 	"google.golang.org/grpc"
 
@@ -13,8 +14,8 @@ import (
 )
 
 func main() {
-	log.Printf("starting user service...")
-	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:40128"))
+	log.Printf("starting user service @ %s", config.UserServiceAddr)
+	lis, err := net.Listen("tcp", fmt.Sprintf(config.UserServiceAddr))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}

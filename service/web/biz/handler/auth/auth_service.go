@@ -4,6 +4,7 @@ package auth
 
 import (
 	"context"
+	"nico_minidouyin/config"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
@@ -24,7 +25,7 @@ func init() {
 
 	opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	var err error
-	conn, err = grpc.Dial("localhost:40128", opts...)
+	conn, err = grpc.Dial(config.UserServiceAddr, opts...)
 	if err != nil {
 		panic(err)
 	}

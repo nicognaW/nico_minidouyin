@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"nico_minidouyin/config"
 
 	"google.golang.org/grpc"
 
@@ -12,8 +13,8 @@ import (
 )
 
 func main() {
-	log.Printf("starting feed service...")
-	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:40127"))
+	log.Printf("starting feed service @ %s", config.FeedServiceAddr)
+	lis, err := net.Listen("tcp", fmt.Sprintf(config.FeedServiceAddr))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}

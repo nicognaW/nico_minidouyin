@@ -35,8 +35,8 @@ func WithConsul() (optPtr *config2.Option) {
 	}
 	opt := server.WithRegistry(
 		*CreateConsulRegistry(), &registry.Info{
-			ServiceName: config.FeedServiceName,
-			Addr:        utils.NewNetAddr("tcp", config.ServiceAddress),
+			ServiceName: config.WebServiceName,
+			Addr:        utils.NewNetAddr("tcp", config.WebServiceAddr),
 			Weight:      10,
 			Tags:        nil,
 		})

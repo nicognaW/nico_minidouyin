@@ -4,6 +4,7 @@ package feed
 
 import (
 	"context"
+	"nico_minidouyin/config"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
@@ -23,7 +24,7 @@ func init() {
 
 	opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	var err error
-	conn, err = grpc.Dial("localhost:40127", opts...)
+	conn, err = grpc.Dial(config.FeedServiceAddr, opts...)
 	if err != nil {
 		panic(err)
 	}

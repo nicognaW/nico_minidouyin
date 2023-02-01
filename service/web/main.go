@@ -31,7 +31,7 @@ func hlogInit() {
 func otelInit() {
 	if !DevEnv() {
 		p := provider.NewOpenTelemetryProvider(
-			provider.WithServiceName(config.FeedServiceName),
+			provider.WithServiceName(config.WebServiceName),
 			// Support setting ExportEndpoint via environment variables: OTEL_EXPORTER_OTLP_ENDPOINT
 			provider.WithInsecure(),
 		)
@@ -45,7 +45,7 @@ func main() {
 	tracer, cfg := tracing.NewServerTracer()
 	h := server.New(
 		tracer,
-		server.WithHostPorts(config.ServiceAddress),
+		server.WithHostPorts(config.WebServiceAddr),
 		*WithConsul(),
 	)
 	h.Use(mw.ProtoJsonMiddleware())
