@@ -1,0 +1,22 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "deploy-improvement" ]
+  pull_request:
+    branches: [ "mian" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the web service Docker image
+      run: docker build . -f service/web/Dockerfile --tag nico-minidouyin-web:$(date +%s)
+    - name: Build the user service Docker image
+      run: docker build . -f service/user/Dockerfile --tag nico-minidouyin-web:$(date +%s)
+    - name: Build the feed service Docker image
+      run: docker build . -f service/feed/Dockerfile --tag nico-minidouyin-web:$(date +%s)
