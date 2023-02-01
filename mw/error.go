@@ -9,6 +9,30 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
+type BizError struct {
+	Msg string
+	Err *error
+}
+
+func (b BizError) Error() string {
+	errorMessage := b.Msg
+	errorResponse := ErrorResponse{
+		StatusCode: 114514,
+		StatusMsg:  &errorMessage,
+	}
+	jsonResponse, err := sonic.Marshal(&errorResponse)
+	if err != nil {
+		panic(err)
+	}
+	return string(jsonResponse)
+}
+
+func NewBizError(bizErrMessage string, a ...any) BizError {
+	wrappedError := fmt.Errorf(bizErrMessage, a)
+	bizError := BizError{Msg: bizErrMessage, Err: &wrappedError}
+	return bizError
+}
+
 type ErrorResponse struct {
 	StatusCode uint32  `protobuf:"varint,1,opt,name=status_code,json=statusCode,proto3" json:"status_code,omitempty" form:"status_code" query:"status_code"` // 状态码，0-成功，其他值-失败
 	StatusMsg  *string `protobuf:"bytes,2,opt,name=status_msg,json=statusMsg,proto3" json:"status_msg,omitempty" form:"status_msg" query:"status_msg"`       // 返回状态描述

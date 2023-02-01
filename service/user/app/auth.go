@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"nico_minidouyin/mw"
 	"strconv"
 
 	genDB "nico_minidouyin/gen/db"
@@ -21,12 +22,10 @@ func (a AuthService) Register(ctx context.Context, request *auth.RegisterRequest
 	user := genDB.Q.User
 	dbUser, err := user.WithContext(ctx).Where(genDB.User.Username.Eq(request.Username)).Select().Find()
 	if err != nil {
-		return nil, err
+		return nil, mw.NewBizError("數據庫查詢失敗", err)
 	}
 	if len(dbUser) > 0 {
-		resp.StatusCode = 114514
-		resp.StatusMsg = "user already exists"
-		return
+		return nil, mw.NewBizError("你嘅用戶名已被占用")
 	}
 	newUser := model.User{
 		Username:      request.Username,
@@ -39,7 +38,7 @@ func (a AuthService) Register(ctx context.Context, request *auth.RegisterRequest
 	err = user.WithContext(ctx).Save(
 		&newUser)
 	if err != nil {
-		return nil, err
+		return nil, mw.NewBizError("數據庫保存失敗", err)
 	}
 	resp.Token = strconv.Itoa(int(newUser.ID)) + newUser.Username
 	resp.StatusCode = 0
@@ -52,19 +51,13 @@ func (a AuthService) Login(ctx context.Context, request *auth.LoginRequest) (*au
 	user := genDB.Q.User
 	dbUser, err := user.WithContext(ctx).Where(genDB.User.Username.Eq(request.Username)).Select().Find()
 	if err != nil {
-		return nil, err
+		return nil, mw.NewBizError("數據庫查詢失敗", err)
 	}
 	if len(dbUser) == 0 {
-		errorMessage := "user not found"
-		resp.StatusCode = 114514
-		resp.StatusMsg = errorMessage
-		return resp, nil
+		return nil, mw.NewBizError("冇搵到用戶")
 	}
 	if *dbUser[0].Password != request.Password {
-		errorMessage := "password incorrect"
-		resp.StatusCode = 114514
-		resp.StatusMsg = errorMessage
-		return resp, nil
+		return nil, mw.NewBizError("密碼唔對")
 	}
 	token := strconv.Itoa(int(dbUser[0].ID)) + dbUser[0].Username
 	resp.Token = token
