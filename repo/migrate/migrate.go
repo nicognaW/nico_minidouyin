@@ -21,7 +21,7 @@ func main() {
 	if err != nil {
 		panic(fmt.Errorf("db connection failed: %v", err))
 	}
-	err = db.AutoMigrate(&userModel.User{}, &feedModel.Video{})
+	err = db.AutoMigrate(&userModel.UserToken{}, &userModel.User{}, &feedModel.Video{})
 	if err != nil {
 		panic(fmt.Errorf("db migrate failed: %v", err))
 	}

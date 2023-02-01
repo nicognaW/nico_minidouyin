@@ -4,14 +4,13 @@ package auth
 
 import (
 	"context"
-	"nico_minidouyin/config"
-
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-
+	"nico_minidouyin/config"
 	"nico_minidouyin/gen/douyin/auth"
+
 	pb "nico_minidouyin/gen/douyin/auth"
 )
 
@@ -66,6 +65,26 @@ func Login(ctx context.Context, c *app.RequestContext) {
 	resp, err := client.Login(ctx, &req)
 	if err != nil {
 		c.JSON(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// Authenticate .
+// @router /douyin/authenticate [GET]
+func Authenticate(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req auth.AuthenticateRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.JSON(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp, err := client.Authenticate(ctx, &req)
+	if err != nil {
+		c.JSON(consts.StatusUnauthorized, err.Error())
 		return
 	}
 

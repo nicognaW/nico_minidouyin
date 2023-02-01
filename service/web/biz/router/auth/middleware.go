@@ -35,3 +35,8 @@ func _login0Mw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func __uthenticateMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
