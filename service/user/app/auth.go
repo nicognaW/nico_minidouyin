@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"golang.org/x/crypto/bcrypt"
 	"nico_minidouyin/mw"
 	"strconv"
 
@@ -10,6 +11,16 @@ import (
 	pb "nico_minidouyin/gen/douyin/auth"
 	"nico_minidouyin/service/user/model"
 )
+
+func HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
+}
+
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
+}
 
 type AuthService struct {
 	pb.UnimplementedAuthServiceServer
@@ -27,9 +38,13 @@ func (a AuthService) Register(ctx context.Context, request *auth.RegisterRequest
 	if len(dbUser) > 0 {
 		return nil, mw.NewBizError("你嘅用戶名已被占用")
 	}
+	hashedPwd, err := HashPassword(request.Password)
+	if err != nil {
+		return nil, mw.NewBizError("密碼唔好使", err)
+	}
 	newUser := model.User{
 		Username:      request.Username,
-		Password:      &request.Password,
+		Password:      &hashedPwd,
 		FollowCount:   0,
 		FollowerCount: 0,
 		Name:          request.Username,
@@ -56,7 +71,11 @@ func (a AuthService) Login(ctx context.Context, request *auth.LoginRequest) (*au
 	if len(dbUser) == 0 {
 		return nil, mw.NewBizError("冇搵到用戶")
 	}
-	if *dbUser[0].Password != request.Password {
+	hashedPwd, err := HashPassword(request.Password)
+	if err != nil {
+		return nil, mw.NewBizError("密碼唔好使", err)
+	}
+	if CheckPasswordHash(*dbUser[0].Password, hashedPwd) {
 		return nil, mw.NewBizError("密碼唔對")
 	}
 	token := strconv.Itoa(int(dbUser[0].ID)) + dbUser[0].Username
